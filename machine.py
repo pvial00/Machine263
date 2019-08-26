@@ -106,3 +106,14 @@ class Machine:
     
     def decrypt(self, msg, key):
         return self.wiring.decrypt(msg, key)
+
+class KDF:
+    def kdf(self, password, iterations=1000, keylen=26):
+         if len(password) < keylen:
+             for x in xrange((keylen - len(password))):
+                 password += "A"
+         m = Machine()
+         key = m.encrypt(password, password)
+         for i in xrange(iterations):
+             m.encrypt(key, key)
+         return key
